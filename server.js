@@ -1,6 +1,6 @@
 // server.js
 import express from 'express';
-import { connectToDb, getDb } from './src/db/connect.js';
+import { connectToDb } from './src/db/connect.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,12 +13,8 @@ if (!PORT) {
 
 const startServer = async () => {
   try {
-    // Connect to MongoDB before starting the server
+    // ✅ Connect to MongoDB before starting the server
     await connectToDb();
-
-    // Temporary test: log all books
-    const books = await getDb().collection('books').find({}).toArray();
-    console.log('Book documents:', books);
 
     // Middleware
     app.use(express.json());
@@ -28,9 +24,14 @@ const startServer = async () => {
       res.send('Server is running and connected to MongoDB');
     });
 
-    // Start server
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
+    // ✅ Mount your books router
+    import('./routes/books.js').then(({ default: booksRouter }) => {
+      app.use('/books', booksRouter);
+
+      // Start server
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
+      });
     });
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
