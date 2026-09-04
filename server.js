@@ -1,7 +1,6 @@
 // server.js
 import express from 'express';
-import { connectToDb } from './src/db/connect.js';
-import booksRouter from './routes/books.js';
+import { connectToDb, getDb } from './src/db/connect.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,11 +16,17 @@ const startServer = async () => {
     // Connect to MongoDB before starting the server
     await connectToDb();
 
+    // Temporary test: log all books
+    const books = await getDb().collection('books').find({}).toArray();
+    console.log('Book documents:', books);
+
     // Middleware
     app.use(express.json());
 
-    // Routes
-    app.use('/books', booksRouter);
+    // Root route (basic check)
+    app.get('/', (req, res) => {
+      res.send('Server is running and connected to MongoDB');
+    });
 
     // Start server
     app.listen(PORT, () => {
