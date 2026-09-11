@@ -1,13 +1,28 @@
 // routes/books.js
 import express from 'express';
-import { getAllBooks, getBookById } from '../controllers/booksController.js';
+import {
+  getAllBooks,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook
+} from '../controllers/booksController.js';
 
 const router = express.Router();
 
-// GET /books - retrieve all books
+// READ - all books
 router.get('/', getAllBooks);
 
-// GET /books/:id - retrieve a single book by id
+// READ - single book by id
 router.get('/:id', getBookById);
+
+// CREATE - add a new book
+router.post('/', createBook);
+
+// UPDATE - modify an existing book
+router.put('/:id', updateBook);
+
+// DELETE - remove a book
+router.delete('/:id', deleteBook);
 
 export default router;

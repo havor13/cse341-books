@@ -1,6 +1,10 @@
 // server.js
 import express from 'express';
 import { connectToDb } from './src/db/connect.js';
+import booksRouter from './routes/books.js';
+import authorsRouter from './routes/authors.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' with { type: 'json' };
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,14 +28,16 @@ const startServer = async () => {
       res.send('Server is running and connected to MongoDB');
     });
 
-    // ✅ Mount your books router
-    import('./routes/books.js').then(({ default: booksRouter }) => {
-      app.use('/books', booksRouter);
+    // ✅ Mount your routers
+    app.use('/books', booksRouter);
+    app.use('/authors', authorsRouter);
 
-      // Start server
-      app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
-      });
+    // ✅ Serve Swagger UI
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
     });
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
