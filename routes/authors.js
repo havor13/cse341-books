@@ -1,4 +1,3 @@
-// routes/authors.js
 import express from 'express';
 import {
   getAllAuthors,
@@ -65,6 +64,7 @@ router.get('/:id', getAuthorById);
  *             required:
  *               - id
  *               - name
+ *               - birthYear
  *             properties:
  *               id:
  *                 type: string
@@ -81,6 +81,8 @@ router.get('/:id', getAuthorById);
  *         description: Author created successfully
  *       400:
  *         description: Invalid author data
+ *       500:
+ *         description: Internal server error
  */
 router.post('/', createAuthor);
 
@@ -114,10 +116,12 @@ router.post('/', createAuthor);
  *     responses:
  *       200:
  *         description: Author updated successfully
- *       404:
- *         description: Author not found
  *       400:
  *         description: Invalid author data
+ *       404:
+ *         description: Author not found
+ *       500:
+ *         description: Internal server error
  */
 router.put('/:id', updateAuthor);
 
@@ -137,8 +141,12 @@ router.put('/:id', updateAuthor);
  *     responses:
  *       204:
  *         description: Author deleted successfully
+ *       400:
+ *         description: Cannot delete author with existing books
  *       404:
  *         description: Author not found
+ *       500:
+ *         description: Internal server error
  */
 router.delete('/:id', deleteAuthor);
 

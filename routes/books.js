@@ -1,4 +1,3 @@
-// routes/books.js
 import express from 'express';
 import {
   getAllBooks,
@@ -38,6 +37,7 @@ router.get('/', getAllBooks);
  *         required: true
  *         schema:
  *           type: string
+ *         description: The custom book id, such as b1
  *     responses:
  *       200:
  *         description: Book returned successfully
@@ -64,23 +64,33 @@ router.get('/:id', getBookById);
  *             required:
  *               - id
  *               - title
- *               - author
+ *               - authorId
+ *               - publishedYear
+ *               - genre
  *             properties:
  *               id:
  *                 type: string
  *               title:
  *                 type: string
- *               author:
+ *               authorId:
+ *                 type: string
+ *               publishedYear:
+ *                 type: number
+ *               genre:
  *                 type: string
  *           example:
  *             id: b4
  *             title: New Book
- *             author: Jane Doe
+ *             authorId: a1
+ *             publishedYear: 2026
+ *             genre: Fiction
  *     responses:
  *       201:
  *         description: Book created successfully
  *       400:
- *         description: Invalid book data
+ *         description: Invalid book data or authorId does not exist
+ *       500:
+ *         description: Internal server error
  */
 router.post('/', createBook);
 
@@ -97,27 +107,41 @@ router.post('/', createBook);
  *         required: true
  *         schema:
  *           type: string
+ *         description: The custom book id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - authorId
+ *               - publishedYear
+ *               - genre
  *             properties:
  *               title:
  *                 type: string
- *               author:
+ *               authorId:
+ *                 type: string
+ *               publishedYear:
+ *                 type: number
+ *               genre:
  *                 type: string
  *           example:
  *             title: Updated Book Title
- *             author: John Smith
+ *             authorId: a2
+ *             publishedYear: 2027
+ *             genre: Non-Fiction
  *     responses:
  *       200:
  *         description: Book updated successfully
+ *       400:
+ *         description: Invalid book data or authorId does not exist
  *       404:
  *         description: Book not found
- *       400:
- *         description: Invalid book data
+ *       500:
+ *         description: Internal server error
  */
 router.put('/:id', updateBook);
 
@@ -134,11 +158,14 @@ router.put('/:id', updateBook);
  *         required: true
  *         schema:
  *           type: string
+ *         description: The custom book id
  *     responses:
  *       204:
  *         description: Book deleted successfully
  *       404:
  *         description: Book not found
+ *       500:
+ *         description: Internal server error
  */
 router.delete('/:id', deleteBook);
 

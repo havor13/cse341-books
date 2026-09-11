@@ -7,6 +7,8 @@ import {
   deleteAuthor as deleteAuthorModel
 } from '../src/models/authors.js';
 
+import { getBooksByAuthorId } from '../src/models/books.js'; // ✅ new import
+
 // GET /authors - retrieve all authors
 export async function getAllAuthors(req, res) {
   try {
@@ -86,6 +88,13 @@ export async function updateAuthor(req, res) {
 export async function deleteAuthor(req, res) {
   try {
     const authorId = req.params.id;
+
+    // ✅ Check if any books reference this author
+    const books = await getBooksByAuthorId(authorId);
+    if (books.length > 0) {
+      return res.status(400).json({ message: 'Cannot delete author with existing books' });
+    }
+
     const result = await deleteAuthorModel(authorId);
 
     if (result.deletedCount === 0) {

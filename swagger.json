@@ -1,14 +1,24 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Books API",
+    "title": "Books & Authors API",
     "version": "1.0.0",
-    "description": "A simple API for working with books and authors"
+    "description": "A simple API for managing books and authors with full CRUD operations and relationship validation"
   },
   "servers": [
     {
       "url": "/",
       "description": "Current server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Books",
+      "description": "Operations related to books"
+    },
+    {
+      "name": "Authors",
+      "description": "Operations related to authors"
     }
   ],
   "paths": {
@@ -20,28 +30,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Books returned successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "title": {
-                        "type": "string"
-                      },
-                      "author": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Books returned successfully"
           },
           "500": {
             "description": "Unable to retrieve books"
@@ -62,7 +51,9 @@
                 "required": [
                   "id",
                   "title",
-                  "author"
+                  "authorId",
+                  "publishedYear",
+                  "genre"
                 ],
                 "properties": {
                   "id": {
@@ -71,7 +62,13 @@
                   "title": {
                     "type": "string"
                   },
-                  "author": {
+                  "authorId": {
+                    "type": "string"
+                  },
+                  "publishedYear": {
+                    "type": "number"
+                  },
+                  "genre": {
                     "type": "string"
                   }
                 }
@@ -79,7 +76,9 @@
               "example": {
                 "id": "b4",
                 "title": "New Book",
-                "author": "Jane Doe"
+                "authorId": "a1",
+                "publishedYear": 2026,
+                "genre": "Fiction"
               }
             }
           }
@@ -89,7 +88,10 @@
             "description": "Book created successfully"
           },
           "400": {
-            "description": "Invalid book data"
+            "description": "Invalid book data or authorId does not exist"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -107,30 +109,13 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The custom book id, such as b1"
           }
         ],
         "responses": {
           "200": {
-            "description": "Book returned successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": "string"
-                    },
-                    "author": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Book returned successfully"
           },
           "404": {
             "description": "Book not found"
@@ -152,7 +137,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The custom book id"
           }
         ],
         "requestBody": {
@@ -161,18 +147,32 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "title",
+                  "authorId",
+                  "publishedYear",
+                  "genre"
+                ],
                 "properties": {
                   "title": {
                     "type": "string"
                   },
-                  "author": {
+                  "authorId": {
+                    "type": "string"
+                  },
+                  "publishedYear": {
+                    "type": "number"
+                  },
+                  "genre": {
                     "type": "string"
                   }
                 }
               },
               "example": {
                 "title": "Updated Book Title",
-                "author": "John Smith"
+                "authorId": "a2",
+                "publishedYear": 2027,
+                "genre": "Non-Fiction"
               }
             }
           }
@@ -182,10 +182,13 @@
             "description": "Book updated successfully"
           },
           "400": {
-            "description": "Invalid book data"
+            "description": "Invalid book data or authorId does not exist"
           },
           "404": {
             "description": "Book not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       },
@@ -201,7 +204,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The custom book id"
           }
         ],
         "responses": {
@@ -210,6 +214,9 @@
           },
           "404": {
             "description": "Book not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -242,7 +249,8 @@
                 "type": "object",
                 "required": [
                   "id",
-                  "name"
+                  "name",
+                  "birthYear"
                 ],
                 "properties": {
                   "id": {
@@ -270,6 +278,9 @@
           },
           "400": {
             "description": "Invalid author data"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -349,6 +360,9 @@
           },
           "404": {
             "description": "Author not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       },
@@ -371,13 +385,18 @@
           "204": {
             "description": "Author deleted successfully"
           },
+          "400": {
+            "description": "Cannot delete author with existing books"
+          },
           "404": {
             "description": "Author not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     }
   },
-  "components": {},
-  "tags": []
+  "components": {}
 }

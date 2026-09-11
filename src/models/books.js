@@ -34,4 +34,10 @@ const deleteBook = async (id) => {
   return await db.collection('books').deleteOne({ id });
 };
 
-export { getAllBooks, getBookById, createBook, updateBook, deleteBook };
+// EXTRA: helper to find books by authorId
+const getBooksByAuthorId = async (authorId) => {
+  const db = getDb();
+  return await db.collection('books').find({ authorId }).toArray();
+};
+
+export { getAllBooks, getBookById, createBook, updateBook, deleteBook, getBooksByAuthorId };

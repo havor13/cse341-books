@@ -34,3 +34,15 @@ export function getDb() {
   }
   return db;
 }
+
+// ✅ Close DB connection for graceful shutdown
+export async function closeDb() {
+  if (client) {
+    try {
+      await client.close();
+      console.log('🔒 MongoDB connection closed');
+    } catch (error) {
+      console.error('❌ Error closing MongoDB connection:', error.message);
+    }
+  }
+}

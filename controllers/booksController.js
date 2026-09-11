@@ -7,6 +7,8 @@ import {
   deleteBook as deleteBookModel
 } from '../src/models/books.js';
 
+import { getAuthorById as getAuthorByIdModel } from '../src/models/authors.js'; // ✅ new import
+
 // GET /books - retrieve all books
 export async function getAllBooks(req, res) {
   try {
@@ -44,6 +46,12 @@ export async function createBook(req, res) {
       return res.status(400).json({ message: 'id, title, authorId, publishedYear, and genre are required' });
     }
 
+    // ✅ Validate authorId
+    const authorExists = await getAuthorByIdModel(authorId);
+    if (!authorExists) {
+      return res.status(400).json({ message: 'Invalid authorId: author does not exist' });
+    }
+
     const newBook = { id, title, authorId, publishedYear, genre };
     const result = await createBookModel(newBook);
 
@@ -66,6 +74,12 @@ export async function updateBook(req, res) {
 
     if (!title || !authorId || !publishedYear || !genre) {
       return res.status(400).json({ message: 'title, authorId, publishedYear, and genre are required' });
+    }
+
+    // ✅ Validate authorId
+    const authorExists = await getAuthorByIdModel(authorId);
+    if (!authorExists) {
+      return res.status(400).json({ message: 'Invalid authorId: author does not exist' });
     }
 
     const updatedBook = { title, authorId, publishedYear, genre };

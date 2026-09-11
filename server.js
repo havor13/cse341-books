@@ -1,6 +1,6 @@
 // server.js
 import express from 'express';
-import { connectToDb } from './src/db/connect.js';
+import { connectToDb, closeDb } from './src/db/connect.js'; // ✅ add closeDb
 import booksRouter from './routes/books.js';
 import authorsRouter from './routes/authors.js';
 import swaggerUi from 'swagger-ui-express';
@@ -14,6 +14,8 @@ if (!PORT) {
     'PORT is not defined. Make sure your local npm scripts reference the .env file with --env-file=.env, or define PORT in your hosted environment settings.'
   );
 }
+
+let server; // keep reference for shutdown
 
 const startServer = async () => {
   try {
@@ -36,7 +38,7 @@ const startServer = async () => {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
     // Start server
-    app.listen(PORT, () => {
+    server = app.listen(PORT, () => {
       console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
     });
   } catch (error) {
@@ -46,3 +48,23 @@ const startServer = async () => {
 };
 
 await startServer();
+
+// ✅ Graceful shutdown handlers
+const shutdown = async (signal) => {
+  console.log(`🛑 Received ${signal}. Shutting down gracefully...`);
+  if (server) {
+    server.close(() => {
+      console.log('HTTP server closed.');
+    });
+  }
+  try {
+    await closeDb(); // close MongoDB connection
+    console.log('MongoDB connection closed.');
+  } catch (err) {
+    console.error('Error closing MongoDB connection:', err.message);
+  }
+  process.exit(0);
+};
+
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));

@@ -6,9 +6,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Books API',
+      title: 'Books & Authors API',
       version: '1.0.0',
-      description: 'A simple API for working with books and authors',
+      description: 'A simple API for managing books and authors with full CRUD operations and relationship validation',
     },
     servers: [
       {
@@ -16,9 +16,23 @@ const options = {
         description: 'Current server',
       },
     ],
+    tags: [
+      {
+        name: 'Books',
+        description: 'Operations related to books',
+      },
+      {
+        name: 'Authors',
+        description: 'Operations related to authors',
+      },
+    ],
   },
   // Files containing OpenAPI comments
-  apis: ['./src/router.js', './routes/books.js', './routes/authors.js', './app.js'],
+  apis: [
+    './routes/books.js',
+    './routes/authors.js',
+    './app.js'
+  ],
 };
 
 // Generate swagger specification
