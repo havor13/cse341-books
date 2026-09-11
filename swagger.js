@@ -8,7 +8,7 @@ const options = {
     info: {
       title: 'Books API',
       version: '1.0.0',
-      description: 'A simple API for working with books',
+      description: 'A simple API for working with books and authors',
     },
     servers: [
       {
@@ -18,7 +18,7 @@ const options = {
     ],
   },
   // Files containing OpenAPI comments
-  apis: ['./src/router.js', './app.js'],
+  apis: ['./src/router.js', './routes/books.js', './routes/authors.js', './app.js'],
 };
 
 // Generate swagger specification

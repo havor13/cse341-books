@@ -3,7 +3,7 @@
   "info": {
     "title": "Books API",
     "version": "1.0.0",
-    "description": "A simple API for working with books"
+    "description": "A simple API for working with books and authors"
   },
   "servers": [
     {
@@ -14,13 +14,13 @@
   "paths": {
     "/books": {
       "get": {
-        "summary": "Retrieve all books",
+        "summary": "Get all books",
         "tags": [
           "Books"
         ],
         "responses": {
           "200": {
-            "description": "A list of books returned successfully",
+            "description": "Books returned successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -44,14 +44,59 @@
             }
           },
           "500": {
-            "description": "Server error while fetching books"
+            "description": "Unable to retrieve books"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new book",
+        "tags": [
+          "Books"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "title",
+                  "author"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "id": "b4",
+                "title": "New Book",
+                "author": "Jane Doe"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Book created successfully"
+          },
+          "400": {
+            "description": "Invalid book data"
           }
         }
       }
     },
     "/books/{id}": {
       "get": {
-        "summary": "Retrieve a single book by ID",
+        "summary": "Get one book by id",
         "tags": [
           "Books"
         ],
@@ -91,7 +136,243 @@
             "description": "Book not found"
           },
           "500": {
-            "description": "Server error while fetching book"
+            "description": "Unable to retrieve book"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing book",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "title": "Updated Book Title",
+                "author": "John Smith"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book updated successfully"
+          },
+          "400": {
+            "description": "Invalid book data"
+          },
+          "404": {
+            "description": "Book not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a book",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Book deleted successfully"
+          },
+          "404": {
+            "description": "Book not found"
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "summary": "Get all authors",
+        "tags": [
+          "Authors"
+        ],
+        "responses": {
+          "200": {
+            "description": "Authors returned successfully"
+          },
+          "500": {
+            "description": "Unable to retrieve authors"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new author",
+        "tags": [
+          "Authors"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "birthYear": {
+                    "type": "number"
+                  }
+                }
+              },
+              "example": {
+                "id": "a4",
+                "name": "Samuel Boateng",
+                "birthYear": 1990
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Author created successfully"
+          },
+          "400": {
+            "description": "Invalid author data"
+          }
+        }
+      }
+    },
+    "/authors/{id}": {
+      "get": {
+        "summary": "Get one author by id",
+        "tags": [
+          "Authors"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "The custom author id, such as a1",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Author returned successfully"
+          },
+          "404": {
+            "description": "Author not found"
+          },
+          "500": {
+            "description": "Unable to retrieve author"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing author",
+        "tags": [
+          "Authors"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "birthYear": {
+                    "type": "number"
+                  }
+                }
+              },
+              "example": {
+                "name": "Samuel B. Boateng",
+                "birthYear": 1991
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Author updated successfully"
+          },
+          "400": {
+            "description": "Invalid author data"
+          },
+          "404": {
+            "description": "Author not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an author",
+        "tags": [
+          "Authors"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Author deleted successfully"
+          },
+          "404": {
+            "description": "Author not found"
           }
         }
       }
