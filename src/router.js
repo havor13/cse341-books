@@ -1,15 +1,3 @@
-// src/router.js
-import express from 'express';
-import {
-  getAllBooks,
-  getBookById,
-  createBook,
-  updateBook,
-  deleteBook
-} from './controllers/booksController.js';
-
-const router = express.Router();
-
 /**
  * @openapi
  * /books:
@@ -66,7 +54,7 @@ router.get('/books/:id', getBookById);
  *               - id
  *               - title
  *               - authorId
- *               - publishedYear
+ *               - publicationDate
  *               - genre
  *             properties:
  *               id:
@@ -75,21 +63,22 @@ router.get('/books/:id', getBookById);
  *                 type: string
  *               authorId:
  *                 type: string
- *               publishedYear:
- *                 type: number
+ *               publicationDate:
+ *                 type: string
+ *                 format: date
  *               genre:
  *                 type: string
  *           example:
  *             id: b4
  *             title: Example Book
  *             authorId: a1
- *             publishedYear: 2026
+ *             publicationDate: 2026-01-01
  *             genre: Fiction
  *     responses:
  *       201:
  *         description: Book created successfully
  *       400:
- *         description: Invalid book data or authorId does not exist
+ *         description: Invalid book data, duplicate id, or authorId does not exist
  *       500:
  *         description: Internal server error
  */
@@ -118,21 +107,22 @@ router.post('/books', createBook);
  *             required:
  *               - title
  *               - authorId
- *               - publishedYear
+ *               - publicationDate
  *               - genre
  *             properties:
  *               title:
  *                 type: string
  *               authorId:
  *                 type: string
- *               publishedYear:
- *                 type: number
+ *               publicationDate:
+ *                 type: string
+ *                 format: date
  *               genre:
  *                 type: string
  *           example:
  *             title: Updated Book Title
  *             authorId: a2
- *             publishedYear: 2027
+ *             publicationDate: 2027-05-15
  *             genre: Non-Fiction
  *     responses:
  *       200:
@@ -169,5 +159,3 @@ router.put('/books/:id', updateBook);
  *         description: Internal server error
  */
 router.delete('/books/:id', deleteBook);
-
-export default router;

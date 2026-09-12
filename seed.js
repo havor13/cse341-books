@@ -9,7 +9,7 @@ const client = new MongoClient(process.env.MONGODB_URI);
 async function seedData() {
   try {
     await client.connect();
-    const db = client.db('cse341-books-db');
+    const db = client.db(process.env.MONGODB_DB_NAME || 'cse341-books-db');
     const booksCollection = db.collection('books');
     const authorsCollection = db.collection('authors');
 
@@ -25,37 +25,38 @@ async function seedData() {
     ];
     await authorsCollection.insertMany(sampleAuthors);
 
-    // Insert sample books
+    // Insert sample books (with authorId references)
     const sampleBooks = [
       {
         id: "b1",
         authorId: "a1",
         title: "Patterns of Light",
-        publishedYear: 2021,
-        genre: "fiction"
+        publicationDate: "2021-08-17",
+        genre: "Fiction"
       },
       {
         id: "b2",
         authorId: "a2",
         title: "Shadows of Tomorrow",
-        publishedYear: 2020,
-        genre: "sci-fi"
+        publicationDate: "2020-05-12",
+        genre: "Sci-Fi"
       },
       {
         id: "b3",
         authorId: "a3",
         title: "Echoes of Silence",
-        publishedYear: 2019,
-        genre: "mystery"
+        publicationDate: "2019-11-03",
+        genre: "Mystery"
       }
     ];
     await booksCollection.insertMany(sampleBooks);
 
     console.log("✅ Seed data for books and authors inserted successfully");
   } catch (err) {
-    console.error("❌ Error seeding data:", err);
+    console.error("❌ Error seeding data:", err.message);
   } finally {
     await client.close();
+    console.log("🔒 MongoDB connection closed after seeding");
   }
 }
 
