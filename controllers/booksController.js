@@ -40,10 +40,16 @@ export async function getBookById(req, res) {
 // POST /books - create a new book
 export async function createBook(req, res) {
   try {
-    const { id, title, authorId, publishedYear, genre } = req.body;
+    const { id, title, authorId, publicationDate, genre } = req.body;
 
-    if (!id || !title || !authorId || !publishedYear || !genre) {
-      return res.status(400).json({ message: 'id, title, authorId, publishedYear, and genre are required' });
+    if (!id || !title || !authorId || !publicationDate || !genre) {
+      return res.status(400).json({ message: 'id, title, authorId, publicationDate, and genre are required' });
+    }
+
+    // ✅ Check for duplicate book id
+    const existingBook = await getBookByIdModel(id);
+    if (existingBook) {
+      return res.status(400).json({ message: 'Book id already exists' });
     }
 
     // ✅ Validate authorId
@@ -52,7 +58,7 @@ export async function createBook(req, res) {
       return res.status(400).json({ message: 'Invalid authorId: author does not exist' });
     }
 
-    const newBook = { id, title, authorId, publishedYear, genre };
+    const newBook = { id, title, authorId, publicationDate, genre };
     const result = await createBookModel(newBook);
 
     if (result.insertedId) {
@@ -70,10 +76,10 @@ export async function createBook(req, res) {
 export async function updateBook(req, res) {
   try {
     const bookId = req.params.id;
-    const { title, authorId, publishedYear, genre } = req.body;
+    const { title, authorId, publicationDate, genre } = req.body;
 
-    if (!title || !authorId || !publishedYear || !genre) {
-      return res.status(400).json({ message: 'title, authorId, publishedYear, and genre are required' });
+    if (!title || !authorId || !publicationDate || !genre) {
+      return res.status(400).json({ message: 'title, authorId, publicationDate, and genre are required' });
     }
 
     // ✅ Validate authorId
@@ -82,7 +88,7 @@ export async function updateBook(req, res) {
       return res.status(400).json({ message: 'Invalid authorId: author does not exist' });
     }
 
-    const updatedBook = { title, authorId, publishedYear, genre };
+    const updatedBook = { title, authorId, publicationDate, genre };
     const result = await updateBookModel(bookId, updatedBook);
 
     if (result.matchedCount === 0) {

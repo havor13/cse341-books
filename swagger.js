@@ -8,12 +8,13 @@ const options = {
     info: {
       title: 'Books & Authors API',
       version: '1.0.0',
-      description: 'A simple API for managing books and authors with full CRUD operations and relationship validation',
+      description:
+        'A simple API for managing books and authors with full CRUD operations and relationship validation',
     },
     servers: [
       {
         url: '/',
-        description: 'Current server',
+        description: 'Local development server',
       },
     ],
     tags: [
@@ -31,7 +32,7 @@ const options = {
   apis: [
     './routes/books.js',
     './routes/authors.js',
-    './app.js'
+    './server.js', // ✅ include server entry point instead of app.js
   ],
 };
 
@@ -40,4 +41,4 @@ const swaggerSpec = swaggerJsdoc(options);
 
 // Write swagger.json file
 writeFileSync('./swagger.json', JSON.stringify(swaggerSpec, null, 2));
-console.log('Swagger documentation generated.');
+console.log('✅ Swagger documentation generated.');

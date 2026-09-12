@@ -80,9 +80,9 @@ router.get('/:id', getAuthorById);
  *       201:
  *         description: Author created successfully
  *       400:
- *         description: Invalid author data
+ *         description: Missing required fields or duplicate author id
  *       500:
- *         description: Internal server error
+ *         description: Unable to create author
  */
 router.post('/', createAuthor);
 
@@ -105,6 +105,9 @@ router.post('/', createAuthor);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - name
+ *               - birthYear
  *             properties:
  *               name:
  *                 type: string
@@ -117,11 +120,11 @@ router.post('/', createAuthor);
  *       200:
  *         description: Author updated successfully
  *       400:
- *         description: Invalid author data
+ *         description: Missing required fields
  *       404:
  *         description: Author not found
  *       500:
- *         description: Internal server error
+ *         description: Unable to update author
  */
 router.put('/:id', updateAuthor);
 
@@ -141,12 +144,12 @@ router.put('/:id', updateAuthor);
  *     responses:
  *       204:
  *         description: Author deleted successfully
- *       400:
- *         description: Cannot delete author with existing books
  *       404:
  *         description: Author not found
+ *       409:
+ *         description: Author cannot be deleted because they still have books
  *       500:
- *         description: Internal server error
+ *         description: Unable to delete author
  */
 router.delete('/:id', deleteAuthor);
 

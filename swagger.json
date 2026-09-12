@@ -8,7 +8,7 @@
   "servers": [
     {
       "url": "/",
-      "description": "Current server"
+      "description": "Local development server"
     }
   ],
   "tags": [
@@ -52,7 +52,7 @@
                   "id",
                   "title",
                   "authorId",
-                  "publishedYear",
+                  "publicationDate",
                   "genre"
                 ],
                 "properties": {
@@ -65,8 +65,9 @@
                   "authorId": {
                     "type": "string"
                   },
-                  "publishedYear": {
-                    "type": "number"
+                  "publicationDate": {
+                    "type": "string",
+                    "format": "date"
                   },
                   "genre": {
                     "type": "string"
@@ -77,7 +78,7 @@
                 "id": "b4",
                 "title": "New Book",
                 "authorId": "a1",
-                "publishedYear": 2026,
+                "publicationDate": "2026-01-01",
                 "genre": "Fiction"
               }
             }
@@ -88,7 +89,7 @@
             "description": "Book created successfully"
           },
           "400": {
-            "description": "Invalid book data or authorId does not exist"
+            "description": "Invalid book data, duplicate id, or authorId does not exist"
           },
           "500": {
             "description": "Internal server error"
@@ -150,7 +151,7 @@
                 "required": [
                   "title",
                   "authorId",
-                  "publishedYear",
+                  "publicationDate",
                   "genre"
                 ],
                 "properties": {
@@ -160,8 +161,9 @@
                   "authorId": {
                     "type": "string"
                   },
-                  "publishedYear": {
-                    "type": "number"
+                  "publicationDate": {
+                    "type": "string",
+                    "format": "date"
                   },
                   "genre": {
                     "type": "string"
@@ -171,7 +173,7 @@
               "example": {
                 "title": "Updated Book Title",
                 "authorId": "a2",
-                "publishedYear": 2027,
+                "publicationDate": "2027-05-15",
                 "genre": "Non-Fiction"
               }
             }
@@ -277,10 +279,10 @@
             "description": "Author created successfully"
           },
           "400": {
-            "description": "Invalid author data"
+            "description": "Missing required fields or duplicate author id"
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Unable to create author"
           }
         }
       }
@@ -335,6 +337,10 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "name",
+                  "birthYear"
+                ],
                 "properties": {
                   "name": {
                     "type": "string"
@@ -356,13 +362,13 @@
             "description": "Author updated successfully"
           },
           "400": {
-            "description": "Invalid author data"
+            "description": "Missing required fields"
           },
           "404": {
             "description": "Author not found"
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Unable to update author"
           }
         }
       },
@@ -385,14 +391,14 @@
           "204": {
             "description": "Author deleted successfully"
           },
-          "400": {
-            "description": "Cannot delete author with existing books"
-          },
           "404": {
             "description": "Author not found"
           },
+          "409": {
+            "description": "Author cannot be deleted because they still have books"
+          },
           "500": {
-            "description": "Internal server error"
+            "description": "Unable to delete author"
           }
         }
       }

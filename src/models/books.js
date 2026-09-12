@@ -40,4 +40,19 @@ const getBooksByAuthorId = async (authorId) => {
   return await db.collection('books').find({ authorId }).toArray();
 };
 
-export { getAllBooks, getBookById, createBook, updateBook, deleteBook, getBooksByAuthorId };
+// EXTRA: helper to check if a book exists by id
+const bookExists = async (id) => {
+  const db = getDb();
+  const book = await db.collection('books').findOne({ id });
+  return !!book;
+};
+
+export { 
+  getAllBooks, 
+  getBookById, 
+  createBook, 
+  updateBook, 
+  deleteBook, 
+  getBooksByAuthorId,
+  bookExists 
+};

@@ -7,6 +7,7 @@ dotenv.config();
 let db;
 let client;
 
+// ✅ Connect to MongoDB
 export async function connectToDb() {
   if (db) return db; // reuse existing connection if already set
 
@@ -19,7 +20,7 @@ export async function connectToDb() {
     client = new MongoClient(connectionString);
     await client.connect();
 
-    db = client.db('cse341-books-db'); // use your database name
+    db = client.db(process.env.MONGODB_DB_NAME || 'cse341-books-db'); // configurable db name
     console.log('✅ Connected to MongoDB');
     return db;
   } catch (error) {
@@ -28,6 +29,7 @@ export async function connectToDb() {
   }
 }
 
+// ✅ Get DB reference
 export function getDb() {
   if (!db) {
     throw new Error('❌ Database not initialized. Call connectToDb() first.');
@@ -40,6 +42,7 @@ export async function closeDb() {
   if (client) {
     try {
       await client.close();
+      db = null;
       console.log('🔒 MongoDB connection closed');
     } catch (error) {
       console.error('❌ Error closing MongoDB connection:', error.message);

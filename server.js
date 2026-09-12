@@ -1,6 +1,6 @@
 // server.js
 import express from 'express';
-import { connectToDb, closeDb } from './src/db/connect.js'; // ✅ add closeDb
+import { connectToDb, closeDb } from './src/db/connect.js';
 import booksRouter from './routes/books.js';
 import authorsRouter from './routes/authors.js';
 import swaggerUi from 'swagger-ui-express';
@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 if (!PORT) {
   throw new Error(
-    'PORT is not defined. Make sure your local npm scripts reference the .env file with --env-file=.env, or define PORT in your hosted environment settings.'
+    '❌ PORT is not defined. Make sure your local npm scripts reference the .env file with --env-file=.env, or define PORT in your hosted environment settings.'
   );
 }
 
@@ -30,7 +30,7 @@ const startServer = async () => {
       res.send('Server is running and connected to MongoDB');
     });
 
-    // ✅ Mount your routers
+    // ✅ Mount routers
     app.use('/books', booksRouter);
     app.use('/authors', authorsRouter);
 
@@ -59,9 +59,9 @@ const shutdown = async (signal) => {
   }
   try {
     await closeDb(); // close MongoDB connection
-    console.log('MongoDB connection closed.');
+    console.log('🔒 MongoDB connection closed.');
   } catch (err) {
-    console.error('Error closing MongoDB connection:', err.message);
+    console.error('❌ Error closing MongoDB connection:', err.message);
   }
   process.exit(0);
 };

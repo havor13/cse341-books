@@ -65,7 +65,7 @@ router.get('/:id', getBookById);
  *               - id
  *               - title
  *               - authorId
- *               - publishedYear
+ *               - publicationDate
  *               - genre
  *             properties:
  *               id:
@@ -74,21 +74,22 @@ router.get('/:id', getBookById);
  *                 type: string
  *               authorId:
  *                 type: string
- *               publishedYear:
- *                 type: number
+ *               publicationDate:
+ *                 type: string
+ *                 format: date
  *               genre:
  *                 type: string
  *           example:
  *             id: b4
  *             title: New Book
  *             authorId: a1
- *             publishedYear: 2026
+ *             publicationDate: 2026-01-01
  *             genre: Fiction
  *     responses:
  *       201:
  *         description: Book created successfully
  *       400:
- *         description: Invalid book data or authorId does not exist
+ *         description: Invalid book data, duplicate id, or authorId does not exist
  *       500:
  *         description: Internal server error
  */
@@ -117,21 +118,22 @@ router.post('/', createBook);
  *             required:
  *               - title
  *               - authorId
- *               - publishedYear
+ *               - publicationDate
  *               - genre
  *             properties:
  *               title:
  *                 type: string
  *               authorId:
  *                 type: string
- *               publishedYear:
- *                 type: number
+ *               publicationDate:
+ *                 type: string
+ *                 format: date
  *               genre:
  *                 type: string
  *           example:
  *             title: Updated Book Title
  *             authorId: a2
- *             publishedYear: 2027
+ *             publicationDate: 2027-05-15
  *             genre: Non-Fiction
  *     responses:
  *       200:
